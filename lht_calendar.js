@@ -42,6 +42,7 @@ function createCalendar(calDate) {
   var calendarHTML = "<table id='calendar_table'>";
   calendarHTML += calCaption(calDate);
   calendarHTML += calWeekdayRow();
+  calendarHTML += calDays(calDate);
   calendarHTML += "</table>";
   return calendarHTML;
   
@@ -65,8 +66,8 @@ var thisYear = calDate.getFullYear();
 
 //write the caption
 
-return "<caption>" + monthName[thisMonth] + " " +
-      thisYear + "</caption>";
+return "<caption>" + monthName[thisMonth] + " " + 
+thisYear + "</caption>";
 
 }
 
@@ -96,14 +97,55 @@ function daysInMonth(calDate) {
       //extract the four digit year and month value
       var thisYear = calDate.getFullYear();
       var thisMonth = calDate.getMonth();
-}
+
 
 //revise the days in February
 
 if (thisYear % 4 === 0) {
-      dayCount[1] = 29;
+      if ((thisYear % 100 != 0) || (thisYear % 400 === 0)) {
+            dayCount[1] = 29; 
+      }
 }
  
 //return the number of days for the current month
 return dayCount[thisMonth];
- 
+}
+
+//function to write the tagle rows for each day of the month
+function calDays(calDate) {
+  //determine the starting day of the month
+  var day = new Date(calDate.getFullYear(), calDate.getMonth(), 1);
+  var weekDay = day.getDay();
+  //write blank cells preceding the starting day
+  var htmlCode = "<tr>";
+  for (var i = 0; i < weekday; i++) {
+      htmlCode += "<td></td>";
+  }
+  //write cells for each day of the month
+  var totalDays = daysInMonth(calDate);
+  var highlightDay = calDate.getDate();
+  for (var i = 1; i <= totalDays; i++) {
+        day.setDate(i);
+        weekDay = day.getDay();
+
+        //if statements
+        if (weekDay === 0) {
+              htmlCode += "<tr>";   
+        }
+
+
+        if (i === highlightDay) {
+         htmlCode += "<td class='calendar_dates' id='calendar_today'>" + i + "</td>";  
+        } else {
+           htmlCode += "<td class='calendar_dates'>" + i + dayEvent[i] + "</td>";   
+        }
+
+
+
+        if (weekDay === 6) {
+              htmlCode += "</tr>";
+        }
+  }
+     return htmlCode;
+}
+
